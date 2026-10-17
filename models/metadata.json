@@ -1,0 +1,123 @@
+{
+  "dataset_rows_raw": 28242,
+  "dataset_rows_cleaned": 28242,
+  "duplicates_removed": 0,
+  "num_countries": 10,
+  "num_crops": 8,
+  "global_metrics": {
+    "LinearRegression": {
+      "R2_Score": 0.1508,
+      "MSE": 2785394336.96,
+      "RMSE": 52776.835,
+      "MAE": 42959.934
+    },
+    "KNN": {
+      "R2_Score": 0.5921,
+      "MSE": 1337926057.3,
+      "RMSE": 36577.672,
+      "MAE": 25375.621
+    },
+    "GradientBoosting": {
+      "R2_Score": 0.9995,
+      "MSE": 1748781.05,
+      "RMSE": 1322.415,
+      "MAE": 826.402
+    },
+    "Voting": {
+      "R2_Score": 0.9993,
+      "MSE": 2271320.04,
+      "RMSE": 1507.09,
+      "MAE": 988.526
+    }
+  },
+  "india_ygbr_r2_train": 99.93,
+  "india_ygbr_r2_test": 99.88,
+  "areas": [
+    "Albania",
+    "Australia",
+    "Brazil",
+    "Egypt",
+    "India",
+    "Indonesia",
+    "Mexico",
+    "Pakistan",
+    "Spain",
+    "Turkey"
+  ],
+  "items": [
+    "Cassava",
+    "Maize",
+    "Potatoes",
+    "Rice, paddy",
+    "Sorghum",
+    "Soybeans",
+    "Sweet potatoes",
+    "Wheat"
+  ],
+  "area_mapping": {
+    "Albania": 0,
+    "Australia": 1,
+    "Brazil": 2,
+    "Egypt": 3,
+    "India": 4,
+    "Indonesia": 5,
+    "Mexico": 6,
+    "Pakistan": 7,
+    "Spain": 8,
+    "Turkey": 9
+  },
+  "item_mapping": {
+    "Cassava": 0,
+    "Maize": 1,
+    "Potatoes": 2,
+    "Rice, paddy": 3,
+    "Sorghum": 4,
+    "Soybeans": 5,
+    "Sweet potatoes": 6,
+    "Wheat": 7
+  },
+  "optimal_conditions": [
+    {
+      "crop": "Potatoes",
+      "temp": "26.2 \u00b0C",
+      "rainfall": "1,120 mm",
+      "pesticides": "33,000 tonnes",
+      "max_yield": "190,000 hg/ha"
+    },
+    {
+      "crop": "Sweet Potatoes",
+      "temp": "26.0 \u00b0C",
+      "rainfall": "1,100 mm",
+      "pesticides": "35,000 tonnes",
+      "max_yield": "90,000 hg/ha"
+    },
+    {
+      "crop": "Rice, paddy",
+      "temp": "25.8 \u00b0C",
+      "rainfall": "1,200 mm",
+      "pesticides": "39,000 tonnes",
+      "max_yield": "32,000 hg/ha"
+    },
+    {
+      "crop": "Wheat",
+      "temp": "25.5 \u00b0C",
+      "rainfall": "1,180 mm",
+      "pesticides": "40,000 tonnes",
+      "max_yield": "27,500 hg/ha"
+    },
+    {
+      "crop": "Soybeans",
+      "temp": "25.6 \u00b0C",
+      "rainfall": "1,270 mm",
+      "pesticides": "48,000 tonnes",
+      "max_yield": "11,200 hg/ha"
+    },
+    {
+      "crop": "Sorghum",
+      "temp": "25.5 \u00b0C",
+      "rainfall": "1,100 mm",
+      "pesticides": "57,000 tonnes",
+      "max_yield": "9,800 hg/ha"
+    }
+  ]
+}
