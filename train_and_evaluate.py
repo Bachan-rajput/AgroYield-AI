@@ -8,6 +8,7 @@ Evaluation (R2, MSE, RMSE, MAE), and High-Res Plot Generation for the Report & W
 """
 
 import os
+import gc
 import json
 import joblib
 import warnings
@@ -19,7 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import train_test_split, KFold, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -58,7 +59,7 @@ def load_or_fetch_dataset():
 
     for url in DATASET_URLS:
         try:
-            print(f"[INFO] Downloading authentic FAO/Kaggle dataset from mirror...")
+            print("[INFO] Downloading authentic FAO/Kaggle dataset from mirror...")
             urllib.request.urlretrieve(url, DATA_PATH)
             df = pd.read_csv(DATA_PATH)
             if len(df) > 1000:
@@ -145,11 +146,11 @@ def main():
     sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".3f", linewidths=1)
     plt.title("Pearson Correlation Matrix Between Meteorological & Yield Variables", fontsize=12, fontweight="bold")
     plt.tight_layout()
-    plt.savefig("static/plots/correlation_heatmap.png", dpi=200)
+    plt.savefig("static/plots/correlation_heatmap.png", dpi=150)
     plt.close()
 
     # =========================================================================
-    # PIPELINE A: GLOBAL MULTI-REGION MODEL (Extension Paper: Label Encoding + Voting Regressor)
+    # PIPELINE A: GLOBAL MULTI-REGION MODEL (Memory-Optimized for Cloud 512MB RAM)
     # =========================================================================
     print("\n[1/2] Training Extension Paper Pipeline (Linear Regression, KNN, Gradient Boosting, Voting Regressor)...")
     le_area = LabelEncoder()
@@ -176,16 +177,21 @@ def main():
     X_train_scaled = scaler_global.fit_transform(X_train)
     X_test_scaled = scaler_global.transform(X_test)
 
-    # Define the 4 Models from the Extension Paper
+    # Define the 4 Models (Optimized depth & estimators to stay well under 512MB RAM)
     lr_model = LinearRegression()
-    knn_model = KNeighborsRegressor(n_neighbors=5, weights="distance")
-    gb_model = GradientBoostingRegressor(n_estimators=150, learning_rate=0.15, max_depth=5, random_state=42)
+    knn_model = KNeighborsRegressor(n_neighbors=5, weights="distance", n_jobs=1)
+    gb_model = GradientBoostingRegressor(n_estimators=120, learning_rate=0.15, max_depth=5, random_state=42)
 
-    # Voting Regressor combining Random Forest, Decision Tree, and Bagging Regressor
-    rfr = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
-    dtr = DecisionTreeRegressor(random_state=42)
-    bagging = BaggingRegressor(estimator=DecisionTreeRegressor(), n_estimators=50, random_state=42, n_jobs=-1)
-    voting_model = VotingRegressor(estimators=[("rfr", rfr), ("dtr", dtr), ("bag", bagging)])
+    # Lightweight Ensemble Voting Regressor
+    rfr = RandomForestRegressor(n_estimators=30, max_depth=16, min_samples_leaf=2, random_state=42, n_jobs=1)
+    dtr = DecisionTreeRegressor(max_depth=16, min_samples_leaf=2, random_state=42)
+    bagging = BaggingRegressor(
+        estimator=DecisionTreeRegressor(max_depth=16, min_samples_leaf=2, random_state=42),
+        n_estimators=15,
+        random_state=42,
+        n_jobs=1,
+    )
+    voting_model = VotingRegressor(estimators=[("rfr", rfr), ("dtr", dtr), ("bag", bagging)], n_jobs=1)
 
     models_global = {
         "LinearRegression": (lr_model, True),
@@ -247,7 +253,7 @@ def main():
     ygbr_pipeline = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("regressor", GradientBoostingRegressor(learning_rate=0.3, n_estimators=150, random_state=42)),
+            ("regressor", GradientBoostingRegressor(learning_rate=0.3, n_estimators=120, random_state=42)),
         ]
     )
     ygbr_pipeline.fit(X_ind_tr, y_ind_tr)
@@ -293,7 +299,7 @@ def main():
         axes[1, 1].text(b.get_x() + b.get_width() / 2, b.get_height() + 800, f"{b.get_height():,.0f}", ha="center", fontsize=9, fontweight="bold")
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig("static/plots/models_comparison.png", dpi=200)
+    plt.savefig("static/plots/models_comparison.png", dpi=150)
     plt.close()
 
     # Actual vs Predicted Scatter Plot (Matches Fig. 4 in IEEE Base Paper)
@@ -307,10 +313,10 @@ def main():
     plt.legend()
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig("static/plots/actual_vs_predicted.png", dpi=200)
+    plt.savefig("static/plots/actual_vs_predicted.png", dpi=150)
     plt.close()
 
-    # Save Models & Metadata for the Flask Web Application
+    # Save Models & Metadata for the Flask Web Application (with compression=3 for low memory)
     area_mapping = {name: int(code) for code, name in enumerate(le_area.classes_)}
     item_mapping = {name: int(code) for code, name in enumerate(le_item.classes_)}
     code_to_area = {int(code): name for name, code in area_mapping.items()}
@@ -330,7 +336,8 @@ def main():
         "code_to_area": code_to_area,
         "code_to_item": code_to_item,
     }
-    joblib.dump(artifacts, "models/crop_yield_artifacts.pkl")
+    joblib.dump(artifacts, "models/crop_yield_artifacts.pkl", compress=3)
+    gc.collect()
 
     summary_metadata = {
         "dataset_rows_raw": initial_rows,
