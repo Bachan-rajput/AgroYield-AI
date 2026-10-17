@@ -2,12 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgroYield AI</title>
+
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='plots/AgroYield.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        /* ===== Base ===== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,26 +18,57 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body {
-            background-color: #f4f6f9;
-            color: #222;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        html {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: clip;
+            -webkit-text-size-adjust: 100%;
         }
 
+        body {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            min-height: 100vh;
+            overflow-x: clip;
+            display: flex;
+            flex-direction: column;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ===== Navbar ===== */
         .navbar {
-            background-color: #13386c;
+            background: #13386c;
             color: #fff;
             padding: 14px 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .brand-box {
             display: flex;
+            flex-shrink: 0;
             align-items: center;
             gap: 12px;
             text-decoration: none;
@@ -44,20 +78,23 @@
         .brand-logo {
             width: 32px;
             height: 32px;
-            background-color: #f5b942;
+            flex-shrink: 0;
+            background: #f5b942;
             color: #13386c;
             font-weight: 700;
             font-size: 19px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 3px;
+            border-radius: 5px;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 28px;
+            min-width: 0;
         }
 
         .nav-btn {
@@ -66,41 +103,47 @@
             color: #dbe4f0;
             font-size: 14px;
             font-weight: 500;
-            cursor: pointer;
-            padding: 6px 2px;
+            white-space: nowrap;
+            padding: 8px 3px;
             border-bottom: 2px solid transparent;
-            transition: 0.2s;
+            transition: color 0.2s ease;
         }
 
         .nav-btn:hover,
         .nav-btn.active {
-            color: #ffffff;
-            border-bottom: 2px solid #e63946;
+            color: #fff;
+            border-bottom-color: #e63946;
         }
 
         .signin-link {
+            flex-shrink: 0;
             background: none;
             border: none;
-            color: #ffffff;
+            color: #fff;
             font-size: 13px;
             font-weight: 500;
-            cursor: pointer;
+            padding: 8px 0;
         }
 
         .signin-link:hover {
             text-decoration: underline;
         }
 
+        /* ===== Hero ===== */
         .dashboard-hero {
-            background-color: #13386c;
-            background-image: linear-gradient(125deg, #102e5a 0%, #17427d 60%, #1d4e8f 100%);
-            color: #ffffff;
+            background: linear-gradient(125deg,
+                    #102e5a 0%,
+                    #17427d 60%,
+                    #1d4e8f 100%);
+            color: #fff;
             padding: 75px 48px 85px;
         }
 
         .hero-inner {
+            width: 100%;
             max-width: 1140px;
             margin: 0 auto;
+            min-width: 0;
         }
 
         .dashboard-hero h1 {
@@ -108,37 +151,46 @@
             font-weight: 600;
             line-height: 1.2;
             margin-bottom: 14px;
+            overflow-wrap: anywhere;
         }
 
         .dashboard-hero p {
+            max-width: 620px;
             font-size: 14px;
             color: #d0def2;
-            max-width: 620px;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 26px;
+            overflow-wrap: anywhere;
         }
 
         .primary-action-btn {
-            background-color: #0b9e65;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            min-height: 44px;
+            background: #0b9e65;
             color: #fff;
             border: none;
-            padding: 10px 22px;
+            padding: 11px 22px;
             font-size: 14px;
             font-weight: 500;
-            border-radius: 3px;
-            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.2s ease;
         }
 
         .primary-action-btn:hover {
-            background-color: #098454;
+            background: #098454;
         }
 
+        /* ===== Main containers ===== */
         .container {
-            max-width: 1140px;
             width: 100%;
+            max-width: 1188px;
             margin: 32px auto;
             padding: 0 24px;
             flex: 1;
+            min-width: 0;
         }
 
         .tab-section {
@@ -149,205 +201,21 @@
             display: block;
         }
 
-        .predictor-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 28px;
-            align-items: start;
-        }
-
-        @media (max-width: 860px) {
-            .predictor-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .navbar {
-                padding: 14px 20px;
-            }
-        }
-
-        .card-box {
-            background: #ffffff;
-            border: 1px solid #dcdcdc;
-            padding: 28px;
-            border-radius: 2px;
-        }
-
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eeeeee;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #222;
-        }
-
-        .form-two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .form-two-col {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 7px;
-            text-transform: uppercase;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 14px;
-            color: #333;
-            background-color: #f9f9f9;
-            border: 1px solid #dcdcdc;
-            border-radius: 2px;
-            outline: none;
-        }
-
-        .form-control:focus {
-            border-color: #0b9e65;
-            background-color: #fff;
-        }
-
-        .predict-btn {
-            background-color: #0b9e65;
-            color: #ffffff;
-            border: none;
-            padding: 11px 28px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 2px;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-
-        .predict-btn:hover {
-            background-color: #088755;
-        }
-
-        .outcome-box {
-            background: #ffffff;
-            border: 1px solid #bbbbbb;
-            padding: 26px 24px;
-            min-height: 210px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .outcome-heading {
-            font-size: 18px;
-            font-weight: 500;
-            color: #222;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .outcome-red-label {
-            font-size: 26px;
-            font-weight: 700;
-            color: #ff1100;
-            line-height: 1.25;
-            text-transform: uppercase;
-        }
-
-        .outcome-red-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ff1100;
-            word-break: break-all;
-            margin-top: 4px;
-        }
-
-        .outcome-meta {
-            margin-top: 22px;
-            padding-top: 12px;
-            border-top: 1px solid #eee;
-            font-size: 12px;
-            color: #555;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 14px;
-        }
-
-        .data-table th,
-        .data-table td {
-            border: 1px solid #dddddd;
-            padding: 10px 14px;
-            text-align: left;
-        }
-
-        .data-table th {
-            background-color: #13386c;
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 24px;
-        }
-
-        @media (max-width: 800px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .chart-card {
-            background: #fff;
-            border: 1px solid #dcdcdc;
-            padding: 14px;
-        }
-
-        .chart-card img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
+        /* ===== Dashboard statistic cards ===== */
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 18px;
             margin-bottom: 24px;
         }
 
         .stat-card {
+            min-width: 0;
             background: #fff;
             border: 1px solid #dcdcdc;
-            padding: 18px 20px;
             border-left: 4px solid #13386c;
+            border-radius: 5px;
+            padding: 18px 20px;
         }
 
         .stat-card h4 {
@@ -355,31 +223,565 @@
             color: #666;
             text-transform: uppercase;
             font-weight: 500;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
         }
 
         .stat-card p {
             font-size: 22px;
             font-weight: 600;
             color: #111;
-            margin-top: 4px;
+            margin-top: 5px;
+            overflow-wrap: anywhere;
         }
 
+        /* ===== Cards and headings ===== */
+        .card-box {
+            min-width: 0;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            padding: 28px;
+            border-radius: 6px;
+        }
+
+        .card-header-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            min-width: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        /* ===== Prediction form ===== */
+        .predictor-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            align-items: start;
+            gap: 24px;
+            min-width: 0;
+        }
+
+        .form-two-col {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            min-width: 0;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            overflow-wrap: anywhere;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            min-height: 44px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #333;
+            background: #f9f9f9;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #0b9e65;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(11, 158, 101, 0.1);
+        }
+
+        .predict-btn {
+            min-height: 44px;
+            max-width: 100%;
+            background: #0b9e65;
+            color: #fff;
+            border: none;
+            padding: 11px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+        }
+
+        .predict-btn:hover {
+            background: #088755;
+        }
+
+        /* ===== Prediction outcome ===== */
+        .outcome-box {
+            min-width: 0;
+            min-height: 210px;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            padding: 26px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .outcome-heading {
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .outcome-red-label {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e62525;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .outcome-red-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e62525;
+            line-height: 1.4;
+            margin-top: 4px;
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+        .outcome-meta {
+            min-width: 0;
+            margin-top: 10px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #555;
+            overflow-wrap: anywhere;
+        }
+
+        /* ===== Responsive data tables ===== */
+        .table-scroll {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+        }
+
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px 14px;
+            text-align: left;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .data-table th {
+            background: #13386c;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        /* ===== Charts ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .chart-card {
+            min-width: 0;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            padding: 14px;
+        }
+
+        .chart-card img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* ===== Footer ===== */
         footer {
+            width: 100%;
             background: #fff;
             border-top: 1px solid #e0e0e0;
             text-align: center;
-            padding: 14px;
+            padding: 16px 12px;
             font-size: 12px;
+            line-height: 1.6;
             color: #666;
-            margin-top: 40px;
+            margin-top: 32px;
+        }
+
+        /* ===========================================
+           TABLET RESPONSIVENESS
+        =========================================== */
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 14px 22px;
+                gap: 14px;
+            }
+
+            .nav-links {
+                gap: 18px;
+            }
+
+            .dashboard-hero {
+                padding: 56px 28px 62px;
+            }
+
+            .dashboard-hero h1 {
+                font-size: clamp(32px, 5vw, 42px);
+            }
+
+            .container {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .predictor-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* ===========================================
+           MOBILE RESPONSIVENESS
+        =========================================== */
+        @media (max-width: 600px) {
+            .navbar {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 8px 12px;
+                padding: 12px 14px;
+            }
+
+            .brand-box {
+                grid-column: 1;
+                grid-row: 1;
+                gap: 8px;
+            }
+
+            .brand-logo {
+                width: 30px;
+                height: 30px;
+                font-size: 17px;
+            }
+
+            .signin-link {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: end;
+                font-size: 12px;
+                white-space: nowrap;
+                padding: 8px 0 8px 8px;
+            }
+
+            .nav-links {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                gap: 6px;
+                padding-top: 4px;
+            }
+
+            .nav-btn {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 10px 4px;
+                font-size: 13px;
+                text-align: center;
+            }
+
+            .dashboard-hero {
+                padding: 40px 18px 42px;
+            }
+
+            .dashboard-hero h1 {
+                font-size: clamp(29px, 8vw, 36px);
+                line-height: 1.2;
+                margin-bottom: 14px;
+            }
+
+            .dashboard-hero p {
+                max-width: 100%;
+                font-size: 13px;
+                line-height: 1.7;
+                margin-bottom: 22px;
+            }
+
+            .dashboard-hero p br {
+                display: none;
+            }
+
+            .primary-action-btn {
+                display: flex;
+                width: 100%;
+                min-height: 46px;
+                padding: 12px 16px;
+                text-align: center;
+            }
+
+            .container {
+                width: 100%;
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .stat-card {
+                padding: 14px 11px;
+                border-left-width: 3px;
+            }
+
+            .stat-card h4 {
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .stat-card p {
+                font-size: clamp(17px, 5vw, 21px);
+                line-height: 1.4;
+            }
+
+            .card-box {
+                padding: 16px 12px;
+                border-radius: 6px;
+            }
+
+            .card-header-row {
+                align-items: flex-start;
+                margin-bottom: 16px;
+                padding-bottom: 10px;
+            }
+
+            .card-title {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+            .predictor-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .form-two-col {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .form-control {
+                width: 100%;
+                min-width: 0;
+                min-height: 46px;
+                padding: 11px 12px;
+                font-size: 16px;
+            }
+
+            /* Model dropdown and Predict button */
+            #predictionForm>div:last-child {
+                display: flex !important;
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 14px !important;
+            }
+
+            #predictionForm>div:last-child>div {
+                width: 100%;
+                min-width: 0;
+            }
+
+            #predictionForm>div:last-child label {
+                display: block;
+                margin-bottom: 6px;
+            }
+
+            #modelSelect {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100%;
+                min-height: 46px;
+                font-size: 16px;
+            }
+
+            .predict-btn {
+                width: 100%;
+                min-height: 46px;
+                margin-top: 0;
+            }
+
+            .outcome-box {
+                min-height: 0;
+                padding: 20px 15px;
+                gap: 18px;
+            }
+
+            .outcome-heading {
+                font-size: 16px;
+                margin-bottom: 14px;
+            }
+
+            .outcome-red-label {
+                font-size: clamp(18px, 5vw, 22px);
+                line-height: 1.4;
+            }
+
+            .outcome-red-value {
+                font-size: clamp(20px, 6vw, 27px);
+                line-height: 1.4;
+                overflow-wrap: anywhere;
+                word-break: normal;
+            }
+
+            .outcome-meta {
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            .table-scroll {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            .table-scroll .data-table {
+                width: 100%;
+                min-width: 600px;
+                font-size: 12px;
+            }
+
+            .table-scroll .data-table th,
+            .table-scroll .data-table td {
+                padding: 9px 10px;
+            }
+
+            .charts-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 14px;
+                margin-top: 16px;
+            }
+
+            .chart-card {
+                width: 100%;
+                min-width: 0;
+                padding: 8px;
+            }
+
+            .chart-card img {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+            }
+
+            footer {
+                margin-top: 24px;
+                padding: 15px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 360px) {
+            .navbar {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .nav-links {
+                gap: 3px;
+            }
+
+            .nav-btn {
+                font-size: 12px;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+
+            .summary-cards {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .dashboard-hero {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .card-box {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- ===== NAVBAR ===== -->
     <header class="navbar">
-        <a href="#" onclick="switchTab('dashboard')" class="brand-box">
+        <a href="#" onclick="switchTab('dashboard'); return false;" class="brand-box">
             <div class="brand-logo">C</div>
         </a>
 
@@ -388,17 +790,25 @@
             <button id="nav-predict" class="nav-btn" onclick="switchTab('predict')">Predict</button>
             <button id="nav-metrics" class="nav-btn" onclick="switchTab('metrics')">Metrics</button>
         </nav>
-        <button class="signin-link" onclick="alert('Sign In feature is coming soon!')">Sign In</button>
+
+        <button class="signin-link" onclick="alert('Sign In feature is coming soon!')">
+            Sign In
+        </button>
     </header>
 
+    <!-- ===== DASHBOARD ===== -->
     <div id="tab-dashboard" class="tab-section active">
+
         <section class="dashboard-hero">
             <div class="hero-inner">
                 <h1>Welcome To<br>Dashboard</h1>
+
                 <p>
-                    Incorporating Meteorological Data and Pesticide Information to Forecast Crop Yields<br>
+                    Incorporating Meteorological Data and Pesticide Information
+                    to Forecast Crop Yields<br>
                     Using Machine Learning
                 </p>
+
                 <button class="primary-action-btn" onclick="switchTab('predict')">
                     Predict Crop Yield
                 </button>
@@ -406,19 +816,23 @@
         </section>
 
         <div class="container">
+
             <div class="summary-cards">
                 <div class="stat-card">
                     <h4>Dataset Records</h4>
                     <p>{{ "{:,}".format(metadata['dataset_rows_raw']) }}</p>
                 </div>
+
                 <div class="stat-card">
                     <h4>Countries</h4>
                     <p>{{ metadata['num_countries'] }}</p>
                 </div>
+
                 <div class="stat-card">
                     <h4>Crops</h4>
                     <p>{{ metadata['num_crops'] }}</p>
                 </div>
+
                 <div class="stat-card">
                     <h4>Voting R2-Score</h4>
                     <p>{{ (metadata['global_metrics']['Voting']['R2_Score'] * 100)|round(2) }}%</p>
@@ -427,50 +841,62 @@
 
             <div class="card-box">
                 <div class="card-header-row">
-                    <span class="card-title">Optimal Crop Conditions (India Dataset Analysis)</span>
+                    <span class="card-title">
+                        Optimal Crop Conditions (India Dataset Analysis)
+                    </span>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Crop Name</th>
-                            <th>Average Temperature</th>
-                            <th>Average Rainfall</th>
-                            <th>Pesticides Used</th>
-                            <th>Peak Yield</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in metadata['optimal_conditions'] %}
-                        <tr>
-                            <td><strong>{{ item['crop'] }}</strong></td>
-                            <td>{{ item['temp'] }}</td>
-                            <td>{{ item['rainfall'] }}</td>
-                            <td>{{ item['pesticides'] }}</td>
-                            <td>{{ item['max_yield'] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Crop Name</th>
+                                <th>Average Temperature</th>
+                                <th>Average Rainfall</th>
+                                <th>Pesticides Used</th>
+                                <th>Peak Yield</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in metadata['optimal_conditions'] %}
+                            <tr>
+                                <td><strong>{{ item['crop'] }}</strong></td>
+                                <td>{{ item['temp'] }}</td>
+                                <td>{{ item['rainfall'] }}</td>
+                                <td>{{ item['pesticides'] }}</td>
+                                <td>{{ item['max_yield'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 
+    <!-- ===== PREDICT TAB ===== -->
     <div id="tab-predict" class="tab-section">
+
         <div class="container">
             <div class="predictor-grid">
 
                 <div class="card-box">
                     <div class="card-header-row">
-                        <span class="card-title">FORM</span>
+                        <span class="card-title">Prediction Form</span>
                     </div>
 
                     <form id="predictionForm" onsubmit="submitPrediction(event)">
+
                         <div class="form-two-col">
+
                             <div>
                                 <div class="form-group">
-                                    <label>AREA:</label>
+                                    <label for="areaInput">AREA:</label>
                                     <input type="text" id="areaInput" list="areaList" value="85" required
-                                        class="form-control" placeholder="Enter Area or Code" />
+                                        class="form-control" placeholder="Enter Area or Code">
+
                                     <datalist id="areaList">
                                         {% for area in metadata['areas'] %}
                                         <option value="{{ metadata['area_mapping'][area] }}">{{ area }}</option>
@@ -480,9 +906,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>ITEM:</label>
+                                    <label for="itemInput">ITEM:</label>
                                     <input type="text" id="itemInput" list="itemList" value="4" required
-                                        class="form-control" placeholder="Enter Crop or Code" />
+                                        class="form-control" placeholder="Enter Crop or Code">
+
                                     <datalist id="itemList">
                                         {% for item in metadata['items'] %}
                                         <option value="{{ metadata['item_mapping'][item] }}">{{ item }}</option>
@@ -492,40 +919,40 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>YEAR:</label>
+                                    <label for="yearInput">YEAR:</label>
                                     <input type="number" id="yearInput" value="2008" min="1990" max="2030" required
-                                        class="form-control" />
+                                        class="form-control">
                                 </div>
                             </div>
 
                             <div>
                                 <div class="form-group">
-                                    <label>AVERAGE RAIN FALL in MM PER YEAR:</label>
+                                    <label for="rainfallInput">
+                                        AVERAGE RAIN FALL IN MM PER YEAR:
+                                    </label>
                                     <input type="number" step="any" id="rainfallInput" value="636" required
-                                        class="form-control" />
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>PESTICIDES TONNES:</label>
+                                    <label for="pesticidesInput">PESTICIDES TONNES:</label>
                                     <input type="number" step="any" id="pesticidesInput" value="40719" required
-                                        class="form-control" />
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>AVG TEMPERATURE:</label>
+                                    <label for="tempInput">AVG TEMPERATURE:</label>
                                     <input type="number" step="any" id="tempInput" value="17.21" required
-                                        class="form-control" />
+                                        class="form-control">
                                 </div>
                             </div>
+
                         </div>
 
-                        <div
-                            style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap; gap: 12px;">
-                            <div>
-                                <label
-                                    style="font-size: 12px; font-weight: 500; color: #555; margin-right: 6px;">MODEL:</label>
-                                <select id="modelSelect" class="form-control"
-                                    style="width: auto; display: inline-block; padding: 7px 12px;">
+                        <div class="prediction-actions">
+                            <div class="model-select-box">
+                                <label for="modelSelect">MODEL:</label>
+                                <select id="modelSelect" class="form-control">
                                     <option value="Voting" selected>Voting Regressor</option>
                                     <option value="GradientBoosting">Gradient Boosting</option>
                                     <option value="KNN">KNN</option>
@@ -535,97 +962,113 @@
 
                             <button type="submit" class="predict-btn">Predict</button>
                         </div>
+
                     </form>
                 </div>
 
-                <div>
+                <!-- Prediction output -->
+                <div class="prediction-results">
+
                     <div class="outcome-box">
                         <div class="outcome-heading">OUTCOME</div>
 
                         <div>
                             <div class="outcome-red-label">CROP YIELD IS:</div>
-                            <div id="yieldValueMain" class="outcome-red-value">47517.781529800275</div>
+                            <div id="yieldValueMain" class="outcome-red-value">
+                                47517.781529800275
+                            </div>
                         </div>
 
                         <div class="outcome-meta">
                             <div id="outcomeBadge" style="margin-bottom: 4px; font-weight: 500; color: #222;">
                                 Input Ready
                             </div>
+
                             <div>
-                                In Tonnes: <strong id="yieldTonnesSub">4.75 tonnes/ha</strong>
+                                In Tonnes:
+                                <strong id="yieldTonnesSub">4.75 tonnes/ha</strong>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-box" style="margin-top: 20px; padding: 18px 22px;">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #333;">
-                            Model Comparison (hg/ha)
+                    <div class="card-box model-comparison">
+                        <div class="comparison-title">Model Comparison (hg/ha)</div>
+
+                        <div class="table-scroll">
+                            <table class="data-table comparison-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Voting Regressor</td>
+                                        <td id="predVoting">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gradient Boosting</td>
+                                        <td id="predGB">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>KNN</td>
+                                        <td id="predKNN">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Linear Regression</td>
+                                        <td id="predLR">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table class="data-table" style="margin-top: 0; font-size: 13px;">
-                            <tbody>
-                                <tr>
-                                    <td>Voting Regressor</td>
-                                    <td id="predVoting" style="font-weight: 600;">-</td>
-                                </tr>
-                                <tr>
-                                    <td>Gradient Boosting</td>
-                                    <td id="predGB" style="font-weight: 600;">-</td>
-                                </tr>
-                                <tr>
-                                    <td>KNN</td>
-                                    <td id="predKNN" style="font-weight: 600;">-</td>
-                                </tr>
-                                <tr>
-                                    <td>Linear Regression</td>
-                                    <td id="predLR" style="font-weight: 600;">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
+
                 </div>
 
             </div>
         </div>
     </div>
 
+    <!-- ===== METRICS TAB ===== -->
     <div id="tab-metrics" class="tab-section">
         <div class="container">
+
             <div class="card-box">
                 <div class="card-header-row">
                     <span class="card-title">Performance Evaluation Metrics</span>
                 </div>
 
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Model</th>
-                            <th>R2-Score</th>
-                            <th>MSE</th>
-                            <th>RMSE</th>
-                            <th>MAE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for model_name, m in metadata['global_metrics'].items() %}
-                        <tr>
-                            <td><strong>{{ model_name }}</strong></td>
-                            <td>{{ m['R2_Score'] }}</td>
-                            <td>{{ "{:,.2f}".format(m['MSE']) }}</td>
-                            <td>{{ "{:,.3f}".format(m['RMSE']) }}</td>
-                            <td>{{ "{:,.3f}".format(m['MAE']) }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>R2-Score</th>
+                                <th>MSE</th>
+                                <th>RMSE</th>
+                                <th>MAE</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for model_name, m in metadata['global_metrics'].items() %}
+                            <tr>
+                                <td><strong>{{ model_name }}</strong></td>
+                                <td>{{ m['R2_Score'] }}</td>
+                                <td>{{ "{:,.2f}".format(m['MSE']) }}</td>
+                                <td>{{ "{:,.3f}".format(m['RMSE']) }}</td>
+                                <td>{{ "{:,.3f}".format(m['MAE']) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <img src="/static/plots/models_comparison.png" alt="Comparison Graphs" />
+                        <img src="/static/plots/models_comparison.png" alt="Model comparison charts">
                     </div>
+
                     <div class="chart-card">
-                        <img src="/static/plots/actual_vs_predicted.png" alt="Actual vs Predicted" />
+                        <img src="/static/plots/actual_vs_predicted.png" alt="Actual versus predicted values">
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -634,50 +1077,176 @@
         Crop Yield Prediction System
     </footer>
 
-    <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-
-            document.getElementById('tab-' + tabName).classList.add('active');
-            const navBtn = document.getElementById('nav-' + tabName);
-            if (navBtn) navBtn.classList.add('active');
+    <style>
+        /* Responsive layout for prediction actions */
+        .prediction-actions {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
         }
 
-        async function submitPrediction(e) {
-            if (e) e.preventDefault();
+        .model-select-box {
+            flex: 1 1 190px;
+            min-width: 0;
+        }
 
-            const payload = {
-                area: document.getElementById("areaInput").value,
-                item: document.getElementById("itemInput").value,
-                year: document.getElementById("yearInput").value,
-                rainfall: document.getElementById("rainfallInput").value,
-                pesticides: document.getElementById("pesticidesInput").value,
-                temperature: document.getElementById("tempInput").value,
-                model: document.getElementById("modelSelect").value,
-            };
+        .model-select-box label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+        }
 
-            const res = await fetch("/predict", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+        .comparison-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .model-comparison {
+            margin-top: 20px;
+            padding: 18px 22px;
+        }
+
+        .comparison-table {
+            min-width: 0;
+            margin-top: 0;
+            font-size: 13px;
+        }
+
+        .comparison-table td:first-child {
+            width: 70%;
+        }
+
+        @media (max-width: 600px) {
+            .prediction-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+
+            .model-select-box {
+                width: 100%;
+                flex-basis: auto;
+            }
+
+            .model-comparison {
+                padding: 16px 12px;
+            }
+
+            .comparison-table {
+                min-width: 0;
+                font-size: 12px;
+            }
+
+            .comparison-table td {
+                overflow-wrap: anywhere;
+            }
+        }
+    </style>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-section').forEach(function (section) {
+                section.classList.remove('active');
             });
-            const data = await res.json();
-            if (data.status === "success") {
-                document.getElementById("yieldValueMain").textContent = data.predicted_yield_hg_ha;
-                document.getElementById("yieldTonnesSub").textContent = data.predicted_yield_tonnes_ha + " tonnes/ha";
-                document.getElementById("outcomeBadge").textContent =
-                    `Region: ${data.area_name} (${data.area_code}) - Crop: ${data.item_name} (${data.item_code})`;
 
-                document.getElementById("predVoting").textContent = data.all_model_predictions.Voting;
-                document.getElementById("predGB").textContent = data.all_model_predictions.GradientBoosting;
-                document.getElementById("predKNN").textContent = data.all_model_predictions.KNN;
-                document.getElementById("predLR").textContent = data.all_model_predictions.LinearRegression;
+            document.querySelectorAll('.nav-btn').forEach(function (button) {
+                button.classList.remove('active');
+            });
+
+            const targetTab = document.getElementById('tab-' + tabName);
+
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            const navButton = document.getElementById('nav-' + tabName);
+
+            if (navButton) {
+                navButton.classList.add('active');
             }
         }
 
-        window.addEventListener("DOMContentLoaded", () => submitPrediction());
+        async function submitPrediction(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            const payload = {
+                area: document.getElementById('areaInput').value,
+                item: document.getElementById('itemInput').value,
+                year: document.getElementById('yearInput').value,
+                rainfall: document.getElementById('rainfallInput').value,
+                pesticides: document.getElementById('pesticidesInput').value,
+                temperature: document.getElementById('tempInput').value,
+                model: document.getElementById('modelSelect').value
+            };
+
+            const predictButton = document.querySelector('.predict-btn');
+            const originalButtonText = predictButton.textContent;
+
+            predictButton.disabled = true;
+            predictButton.textContent = 'Predicting...';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Prediction request failed. Please try again.');
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    document.getElementById('yieldValueMain').textContent =
+                        data.predicted_yield_hg_ha;
+
+                    document.getElementById('yieldTonnesSub').textContent =
+                        data.predicted_yield_tonnes_ha + ' tonnes/ha';
+
+                    document.getElementById('outcomeBadge').textContent =
+                        `Region: ${data.area_name} (${data.area_code}) - Crop: ${data.item_name} (${data.item_code})`;
+
+                    document.getElementById('predVoting').textContent =
+                        data.all_model_predictions.Voting;
+
+                    document.getElementById('predGB').textContent =
+                        data.all_model_predictions.GradientBoosting;
+
+                    document.getElementById('predKNN').textContent =
+                        data.all_model_predictions.KNN;
+
+                    document.getElementById('predLR').textContent =
+                        data.all_model_predictions.LinearRegression;
+                } else {
+                    alert(data.message || 'Unable to generate prediction.');
+                }
+            } catch (error) {
+                console.error('Prediction error:', error);
+                alert('Prediction failed. Check your connection and try again.');
+            } finally {
+                predictButton.disabled = false;
+                predictButton.textContent = originalButtonText;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            submitPrediction();
+        });
     </script>
+
 </body>
 
 </html>
